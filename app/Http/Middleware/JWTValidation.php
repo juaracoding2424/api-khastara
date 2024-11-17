@@ -41,7 +41,7 @@ class JWTValidation
                 'status'    => 'Failed'
             ], 401);
         } 
-        if($authapi[0]['IS_ACTIVE'] == '0 '&& $authapi->APITOKEN != '123ABC-demoonly'){
+        if($authapi[0]['ISACTIVE'] == '0 '&& $authapi->APITOKEN != '123ABC-demoonly'){
             return response()->json([
                 'message'   => 'Application Key is disabled. Contact administrator.',
                 'status'    => 'Failed'
