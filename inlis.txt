@@ -1,0 +1,232 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using SolrNet.Attributes;
+
+namespace Solr_Indexer.Model
+{
+    public class CatalogsModel
+    {
+        [SolrUniqueKey("solr_id")]
+        public string solr_id { get; set; }
+
+        [SolrField("model")]
+        public string model { get; set; }
+
+        [SolrField("catalog_id")]
+        public double catalog_id { get; set; }
+
+        [SolrField("control_number")]
+        public string control_number { get; set; }
+
+        [SolrField("bib_id")]
+        public string bib_id { get; set; }
+
+        [SolrField("title")]
+        public string title { get; set; }
+
+        [SolrField("list_title")]
+        public ICollection<string> list_title { get; set; }
+
+        [SolrField("author")]
+        public string author { get; set; }
+
+        [SolrField("list_author")]
+        public ICollection<string> list_author { get; set; }
+
+        [SolrField("edition")]
+        public string edition { get; set; }
+
+        [SolrField("publisher")]
+        public string publisher { get; set; }
+
+        [SolrField("list_publisher")]
+        public ICollection<string> list_publisher { get; set; }
+
+        [SolrField("publish_location")]
+        public string publish_location { get; set; }
+
+        [SolrField("list_publish_location")]
+        public ICollection<string> list_publish_location { get; set; }
+
+        [SolrField("publish_year")]
+        public string publish_year { get; set; }
+
+        [SolrField("list_publish_year")]
+        public ICollection<string> list_publish_year { get; set; }
+
+        [SolrField("list_publication")]
+        public ICollection<string> list_publication { get; set; }
+
+        [SolrField("deskripsi_fisik")]
+        public string deskripsi_fisik { get; set; }
+
+        [SolrField("subject")]
+        public string subject { get; set; }
+
+        [SolrField("list_subject")]
+        public ICollection<string> list_subject { get; set; }
+
+        [SolrField("worksheet_id")]
+        public string worksheet_id { get; set; }
+
+        [SolrField("worksheet_name")]
+        public string worksheet_name { get; set; }
+
+        [SolrField("cover_utama")]
+        public string cover_utama { get; set; }
+
+        [SolrField("list_cover")]
+        public ICollection<string> list_cover { get; set; }
+
+        [SolrField("isbn")]
+        public string isbn { get; set; }
+
+        [SolrField("list_isbn")]
+        public ICollection<string> list_isbn { get; set; }
+
+        [SolrField("list_issn")]
+        public ICollection<string> list_issn { get; set; }
+
+        [SolrField("call_number")]
+        public string call_number { get; set; }
+
+        [SolrField("list_call_number")]
+        public ICollection<string> list_call_number { get; set; }
+
+        [SolrField("ddc")]
+        public string ddc { get; set; }
+
+        [SolrField("language_code")]
+        public string language_code { get; set; }
+
+        [SolrField("list_language_code")]
+        public ICollection<string> list_language_code { get; set; }
+
+        [SolrField("language_name")]
+        public string language_name { get; set; }
+
+        [SolrField("list_language_name")]
+        public ICollection<string> list_language_name { get; set; }
+
+        [SolrField("bentuk_karya")]
+        public string bentuk_karya { get; set; }
+
+        [SolrField("target_pembaca")]
+        public string target_pembaca { get; set; }
+
+        [SolrField("nama_badan_korporasi")]
+        public string nama_badan_korporasi { get; set; }
+
+        [SolrField("nama_pertemuan")]
+        public string nama_pertemuan { get; set; }
+
+        [SolrField("judul_seragam")]
+        public string judul_seragam { get; set; }
+
+        [SolrField("jejakan_badan_korporasi")]
+        public string jejakan_badan_korporasi { get; set; }
+
+        [SolrField("pernyataan_seri")]
+        public string pernyataan_seri { get; set; }
+
+        [SolrField("disertasi_akademik")]
+        public string disertasi_akademik { get; set; }
+
+        [SolrField("catatan_bibliografi")]
+        public string catatan_bibliografi { get; set; }
+
+        [SolrField("catatan_isi")]
+        public string catatan_isi { get; set; }
+
+        [SolrField("list_subjek_nama_orang")]
+        public ICollection<string> list_subjek_nama_orang { get; set; }
+
+        [SolrField("list_subjek_nama_badan_korporasi")]
+        public ICollection<string> list_subjek_nama_badan_korporasi { get; set; }
+
+        [SolrField("list_subjek_nama_pertemuan")]
+        public ICollection<string> list_subjek_nama_pertemuan { get; set; }
+
+        [SolrField("list_subjek_topik")]
+        public ICollection<string> list_subjek_topik { get; set; }
+
+        [SolrField("list_subjek_nama_geografis")]
+        public ICollection<string> list_subjek_nama_geografis { get; set; }
+
+        [SolrField("list_tambahan_nama_orang")]
+        public ICollection<string> list_tambahan_nama_orang { get; set; }
+
+        [SolrField("list_entri_tambahan_nama_badan_korporasi")]
+        public ICollection<string> list_entri_tambahan_nama_badan_korporasi { get; set; }
+
+        [SolrField("list_entry_tambahan_nama_pertemuan")]
+        public ICollection<string> list_entry_tambahan_nama_pertemuan { get; set; }
+
+        [SolrField("list_entri_tambahan_judul_seragam")]
+        public ICollection<string> list_entri_tambahan_judul_seragam { get; set; }
+
+        [SolrField("list_entri_tambahan_judul_lain")]
+        public ICollection<string> list_entri_tambahan_judul_lain { get; set; }
+
+        [SolrField("list_edisi_serial")]
+        public ICollection<string> list_edisi_serial { get; set; }
+
+        [SolrField("list_nomor_induk")]
+        public ICollection<string> list_nomor_induk { get; set; }
+
+        [SolrField("list_nomor_deposit")]
+        public ICollection<string> list_nomor_deposit { get; set; }
+
+        [SolrField("lokasikoleksi")]
+        public ICollection<string> LokasiKoleksi { get; set; }
+
+        [SolrField("create_date")]
+        public string create_date { get; set; }
+
+        [SolrField("last_update_date")]
+        public string last_update_date { get; set; }
+
+        [SolrField("last_file_update_date")]
+        public string last_file_update_date { get; set; }
+
+        [SolrField("index_date")]
+        public string index_date { get; set; }
+
+        [SolrField("konten_digital_count")]
+        public int konten_digital_count { get; set; }
+
+        [SolrField("list_konten_digital")]
+        public List<FileModel> list_konten_digital { get; set; }
+
+        public List<CatalogRuasModel> catalogRuas { get; set; }
+    }
+
+    public class FileModel
+    {
+        public int Id { get; set; }
+        public string PublicFileUrl { get; set; }
+        public string UploadDate { get; set; }
+
+        public List<DigitalKontenModel> DigitalKontenList { get; set; }
+    }
+
+    public class DigitalKontenModel
+    {
+        public string FileUrl { get; set; }
+    }
+
+    public class CatalogRuasModel
+    {
+        public int RuasId { get; set; }
+        public string Tag { get; set; }
+        public string Indicator1 { get; set; }
+        public string Indicator2 { get; set; }
+        public int Sequence { get; set; }
+        public string SubRuas { get; set; }
+        public string Value { get; set; }
+        public int SequenceSubRuas { get; set; }
+    }
+
+}
