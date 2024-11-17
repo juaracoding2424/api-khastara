@@ -78,9 +78,9 @@ class CollectionController extends Controller
 
         $sql = "SELECT '' as solr_id, id as catalog_id, bibid as bib_id, title, controlnumber as control_number, author, edition, publisher, publishyear as publish_year,
                         publishlocation as publish_location, description as deskripsi_fisik, subject, deweyno as ddc, LANGUAGES as language_code, 
-                        CREATEDATE as create_date, UPDATEDATE as last_update_date FROM CATALOGS WHERE worksheet_id=12";
+                        CREATEDATE as create_date, UPDATEDATE as last_update_date FROM CATALOGS WHERE ISKHASTARA=1";
         $data = kurl("get","getlistraw", "", "SELECT outer.* FROM (SELECT ROWNUM nomor, inner.* FROM ($sql )  inner WHERE rownum <=$end) outer WHERE nomor >$start", 'sql', '')["Data"]["Items"];
-        $totalData = kurl("get","getlistraw", "", "SELECT COUNT(*) JML FROM CATALOGS WHERE worksheet_id=12",'sql', '')["Data"]["Items"][0]["JML"];  
+        $totalData = kurl("get","getlistraw", "", "SELECT COUNT(*) JML FROM CATALOGS WHERE ISKHASTARA=1",'sql', '')["Data"]["Items"][0]["JML"];  
         
         if(!isset($data[0])){
             return response()->json([
