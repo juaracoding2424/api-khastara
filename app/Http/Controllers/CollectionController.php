@@ -10,26 +10,21 @@ class CollectionController extends Controller
     function getById(Request $request, $id)
     {
         //get data katalog
-        $sql_catalog = "SELECT '' as solr_id, c.id as catalog_id, bibid as bib_id, title, controlnumber as control_number, author, edition, publisher, publishyear as publish_year,
-                        publishlocation as publish_location, description as deskripsi_fisik, subject, deweyno as ddc, LANGUAGES as language_code, 
-                        c.CREATEDATE as create_date, c.UPDATEDATE as last_update_date,
-                        w.name as worksheet_name FROM CATALOGS c
-                        LEFT JOIN worksheets w on c.worksheet_id = w.id
-                        WHERE c.ID='$id' AND iskhastara=1";
-        $catalog = Http::post(config('app.internal_api_url') . "?token=" . config('app.internal_api_token') . "&op=getlistraw&sql=" . urlencode($sql_catalog));
-        
-        $sql_catalog_ruas = "SELECT tag, indicator1, indicator2, sequence, value FROM catalog_ruas WHERE CATALOGID='$id' ORDER BY sequence ";
-        $catalog_ruas = Http::post(config('app.internal_api_url') . "?token=" . config('app.internal_api_token') . "&op=getlistraw&sql=" . urlencode($sql_catalog_ruas));
-        if(!isset($catalog['Data']["Items"][0])){ //data katalog tidak ditemukan
+        $fl = "catalog_id,bib_id,title,control_number,author,edition,publisher,publish_year,
+                publish_location,deskripsi_fisik,subject,ddc,catatan_isi,call_number,language_code,create_date,last_update_date,list_aksara,
+                worksheet_name,konten_digital_count";       
+        $response = kurl_solr([
+                'fl'=> $fl,
+                'q' => 'model:catalogs AND catalog_id:'.$id
+        ]);
+        if($response == '400'){ //data katalog tidak ditemukan
             return response()->json([
                     'status' => 'Failed',
                     'message' => 'ID ' . $id . ' not found!',
             ], 500);
         } 
-        $catalog_new = []; $catalog_ruas_new = [];
-        foreach($catalog['Data']['Items'][0] as $key=>$val){
-            $catalog_new = array_merge($catalog_new, [strtolower($key) => $val]);
-        }
+        $sql_catalog_ruas = "SELECT tag, indicator1, indicator2, sequence, value FROM catalog_ruas WHERE CATALOGID='$id' ORDER BY sequence ";
+        $catalog_ruas = Http::post(config('app.internal_api_url') . "?token=" . config('app.internal_api_token') . "&op=getlistraw&sql=" . urlencode($sql_catalog_ruas));
 
         foreach($catalog_ruas['Data']['Items'] as $c){
             $c_detail = [];
@@ -40,7 +35,7 @@ class CollectionController extends Controller
         }
         return response()->json([
             'status' => 'Success',
-            'data' => $catalog_new,
+            'data' => $response["response"]["docs"][0],
             'marc'  => $catalog_ruas_new
         ], 200);
     }
@@ -49,7 +44,7 @@ class CollectionController extends Controller
     {
         //get data katalog
         $sql = "SELECT catalog_id, fileurl FROM CATALOGFILES WHERE CATALOG_ID='$id' AND ispublish=1 AND isfileexist=1";
-        $data = Http::post(config('app.internal_api_url') . "?token=" . config('app.internal_api_token') . "&op=getlistraw&sql=" . urlencode($sql));
+        $data = Http::post(config('app.internal_api_url') . "?token=" . config('app.internal_api_token') . "&op=getlistkontendigital&CatalogId=" . $id);
         
         if(!isset($data['Data']["Items"][0])){ //data katalog tidak ditemukan
             return response()->json([
@@ -72,43 +67,53 @@ class CollectionController extends Controller
         ], 200);
     }
 
+
     function getList(Request $request)
     {
         $page = $request->input('page') ? $request->input('page') : 1;
         $length = $request->input('length') ? $request->input('length') : 10;
         $start  = ($page - 1) * $length;
         $end = $start + $length;
-
-        $sql = "SELECT '' as solr_id, c.id as catalog_id, bibid as bib_id, title, controlnumber as control_number, author, edition, publisher, publishyear as publish_year,
-                        publishlocation as publish_location, description as deskripsi_fisik, subject, deweyno as ddc, LANGUAGES as language_code, 
-                        c.CREATEDATE as create_date, c.UPDATEDATE as last_update_date,
-                        w.name as worksheet_name FROM CATALOGS c
-                        LEFT JOIN worksheets w on c.worksheet_id = w.id
-                        WHERE ISKHASTARA=1";
-        $data = kurl("get","getlistraw", "", "SELECT outer.* FROM (SELECT ROWNUM nomor, inner.* FROM ($sql )  inner WHERE rownum <=$end) outer WHERE nomor >$start", 'sql', '')["Data"]["Items"];
-        $totalData = kurl("get","getlistraw", "", "SELECT COUNT(*) JML FROM CATALOGS WHERE ISKHASTARA=1",'sql', '')["Data"]["Items"][0]["JML"];  
+        $fl = "catalog_id,bib_id,title,control_number,author,edition,publisher,publish_year,
+               publish_location,deskripsi_fisik,subject,ddc,catatan_isi,call_number,language_code,create_date,last_update_date,list_aksara,
+               worksheet_name,konten_digital_count";
+        $q = "";
+        if($request->input('title')){
+            $count = str_word_count($request->input('title'));
+            if($count > 1) {
+                $q .= ' AND title_text:"' .$request->input('title'). '"';
+            } else {
+                $q .= " AND title_text:*" .$request->input('title'). "*";
+            }
+        }
+        if($request->input('author')){
+            $q .= " AND author_text:*".$request->input('author')."*";
+        }
+        if($request->input('publisher')){
+            $q .= " AND publisher_text:*".$request->input('publisher')."*";
+        }
+        if($request->input('catatan_isi')){
+            $q .= " AND catatan_isi:*".$request->input('catatan_isi')."*";
+        }
+        if($request->input('subject')){
+            $q .= " AND subject_text:*".$request->input('subject')."*";
+        }
+        $response = kurl_solr([
+            'fl'=> $fl,
+            'q' => 'model:catalogs' .$q
+        ]);
         
-        if(!isset($data[0])){
+        if($response == '400'){
             return response()->json([
                     'status' => 'Failed',
                     'message' => 'Error!',
             ], 500);
         } 
-        $data_new = []; 
-
-        foreach($data as $c){
-            $detail = [];
-            foreach($c as $key=>$val){
-                $detail = array_merge($detail, [strtolower($key) => $val]);
-            }
-            $data_new[] = $detail; 
-        }
-
         return response()->json([
-            'data' => $data_new,
+            'data' => $response["response"]["docs"],
             'page' => $page,
             'length' => $length,
-            'total' => $totalData,
+            'total' => $response["response"]["numFound"],
         ], 200);
     }
 }

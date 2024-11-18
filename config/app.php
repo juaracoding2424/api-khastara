@@ -124,6 +124,7 @@ return [
     ],
     'internal_api_url' => env('INTERNAL_API_URL'),
     'internal_api_token' => env('INTERNAL_API_TOKEN'),
+    'solr_url' => env('SOLR_URL'),
     'expires' => env('TOKEN_EXPIRES', '+30 days'),
 
 ];
