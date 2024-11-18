@@ -10,9 +10,12 @@ class CollectionController extends Controller
     function getById(Request $request, $id)
     {
         //get data katalog
-        $sql_catalog = "SELECT '' as solr_id, id as catalog_id, bibid as bib_id, title, controlnumber as control_number, author, edition, publisher, publishyear as publish_year,
+        $sql_catalog = "SELECT '' as solr_id, c.id as catalog_id, bibid as bib_id, title, controlnumber as control_number, author, edition, publisher, publishyear as publish_year,
                         publishlocation as publish_location, description as deskripsi_fisik, subject, deweyno as ddc, LANGUAGES as language_code, 
-                        CREATEDATE as create_date, UPDATEDATE as last_update_date FROM CATALOGS WHERE ID='$id'";
+                        c.CREATEDATE as create_date, c.UPDATEDATE as last_update_date,
+                        w.name as worksheet_name FROM CATALOGS c
+                        LEFT JOIN worksheets w on c.worksheet_id = w.id
+                        WHERE c.ID='$id' AND iskhastara=1";
         $catalog = Http::post(config('app.internal_api_url') . "?token=" . config('app.internal_api_token') . "&op=getlistraw&sql=" . urlencode($sql_catalog));
         
         $sql_catalog_ruas = "SELECT tag, indicator1, indicator2, sequence, value FROM catalog_ruas WHERE CATALOGID='$id' ORDER BY sequence ";
@@ -76,9 +79,12 @@ class CollectionController extends Controller
         $start  = ($page - 1) * $length;
         $end = $start + $length;
 
-        $sql = "SELECT '' as solr_id, id as catalog_id, bibid as bib_id, title, controlnumber as control_number, author, edition, publisher, publishyear as publish_year,
+        $sql = "SELECT '' as solr_id, c.id as catalog_id, bibid as bib_id, title, controlnumber as control_number, author, edition, publisher, publishyear as publish_year,
                         publishlocation as publish_location, description as deskripsi_fisik, subject, deweyno as ddc, LANGUAGES as language_code, 
-                        CREATEDATE as create_date, UPDATEDATE as last_update_date FROM CATALOGS WHERE ISKHASTARA=1";
+                        c.CREATEDATE as create_date, c.UPDATEDATE as last_update_date,
+                        w.name as worksheet_name FROM CATALOGS c
+                        LEFT JOIN worksheets w on c.worksheet_id = w.id
+                        WHERE ISKHASTARA=1";
         $data = kurl("get","getlistraw", "", "SELECT outer.* FROM (SELECT ROWNUM nomor, inner.* FROM ($sql )  inner WHERE rownum <=$end) outer WHERE nomor >$start", 'sql', '')["Data"]["Items"];
         $totalData = kurl("get","getlistraw", "", "SELECT COUNT(*) JML FROM CATALOGS WHERE ISKHASTARA=1",'sql', '')["Data"]["Items"][0]["JML"];  
         
