@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Carbon\Carbon;
+use DateTime;
+use DatePeriod;
+use DateInterval;
 
 class CollectionController extends Controller
 {
@@ -97,6 +101,21 @@ class CollectionController extends Controller
         }
         if($request->input('subject')){
             $q .= " AND subject_text:*".$request->input('subject')."*";
+        }
+
+        if($request->input('year_start') && $request->input('year_end')){
+            $start = Carbon::createFromFormat('Y-m-d', $request->input('year_start') . '-01-01');
+            $end = Carbon::createFromFormat('Y-m-d', $request->input('year_end') .'-12-31');
+            $interval = new DateInterval('P1Y');
+            $daterange = new DatePeriod($start, $interval ,$end);
+            $ranges = [];
+            foreach($daterange as $date1){
+                $ranges[]= $date1->format('Y');
+            }
+            $q .= " AND publish_year:(".implode(" ", $ranges) . ")";
+        }
+        if($request->input('year')){
+            $q .= " AND publish_year:".$request->input('year');
         }
         $response = kurl_solr([
             'fl'=> $fl,
