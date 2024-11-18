@@ -12,7 +12,7 @@ class TokenController extends Controller
     {
         $data = kurl("get","getlistraw", "", "SELECT * FROM API_MEMBERS WHERE APIKEY='".$request->input('x-api-key')."'", 'sql', '')["Data"]["Items"];
         if(isset($data[0]["NAMA"])){
-            $token = Str::random(60);
+            $token = Str::random(45);
             $expired_at = Date('Y-m-d H:i:s', strtotime(config('app.expires')));
             $send_data = [
                 ["name"=> "APITOKEN", "Value" => $token],
