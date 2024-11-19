@@ -96,6 +96,9 @@ class CollectionController extends Controller
         if($request->input('publisher')){
             $q .= " AND publisher_text:*".$request->input('publisher')."*";
         }
+        if($request->input('publish_year')){
+            $q .= " AND publish_year:".$request->input('publish_year');
+        }
         if($request->input('catatan_isi')){
             $q .= " AND catatan_isi:*".$request->input('catatan_isi')."*";
         }
