@@ -135,4 +135,46 @@ class CollectionController extends Controller
             'total' => $response["response"]["numFound"],
         ], 200);
     }
+
+    function getStatistic(Request $request)
+    {
+        $response = kurl_solr([
+            'rows'=> 0,
+            'q' => 'model:catalogs',
+            'json.facet' => json_encode([
+                'subject' => [
+                    'type' => 'terms',
+                    'field'=> 'list_subjek_topik',
+                    'limit' => 10
+                ],
+                'worksheet_name' => [
+                    'type' => 'terms',
+                    'field'=> 'worksheet_name',
+                    'limit' => 20
+                ],
+                'language_name' => [
+                    'type' => 'terms',
+                    'field'=> 'list_language_name',
+                    'limit' => 10
+                ],
+                'author' => [
+                    'type' => 'terms',
+                    'field'=> 'list_author',
+                    'limit' => 10
+                ]
+            ]),
+        ]);
+        if($response == '400'){
+            return response()->json([
+                    'status' => 'Failed',
+                    'message' => 'Error!',
+            ], 500);
+        } 
+        return response()->json([
+            'subject' => $response["facets"]["subject"]["buckets"],
+            'worksheet_name' => $response["facets"]["worksheet_name"]["buckets"],
+            'language_name' => $response["facets"]["language_name"]["buckets"],
+            'author' => $response["facets"]["author"]["buckets"],
+        ], 200);
+    }
 }
