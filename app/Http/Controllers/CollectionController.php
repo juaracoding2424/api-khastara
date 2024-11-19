@@ -171,10 +171,10 @@ class CollectionController extends Controller
             ], 500);
         } 
         return response()->json([
-            'subject' => $response["facets"]["subject"]["buckets"],
+            //'subject' => $response["facets"]["subject"]["buckets"],
             'worksheet_name' => $response["facets"]["worksheet_name"]["buckets"],
             'language_name' => $response["facets"]["language_name"]["buckets"],
-            'author' => $response["facets"]["author"]["buckets"],
+            //'author' => $response["facets"]["author"]["buckets"],
         ], 200);
     }
 }
