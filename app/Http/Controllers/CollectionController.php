@@ -29,7 +29,7 @@ class CollectionController extends Controller
         } 
         $sql_catalog_ruas = "SELECT tag, indicator1, indicator2, sequence, value FROM catalog_ruas WHERE CATALOGID='$id' ORDER BY sequence ";
         $catalog_ruas = Http::post(config('app.internal_api_url') . "?token=" . config('app.internal_api_token') . "&op=getlistraw&sql=" . urlencode($sql_catalog_ruas));
-
+        $catalog_ruas_new = [];
         foreach($catalog_ruas['Data']['Items'] as $c){
             $c_detail = [];
             foreach($c as $key=>$val){
@@ -174,7 +174,7 @@ class CollectionController extends Controller
             ], 500);
         } 
         return response()->json([
-            //'subject' => $response["facets"]["subject"]["buckets"],
+            'subject' => $response["facets"]["subject"]["buckets"],
             'worksheet_name' => $response["facets"]["worksheet_name"]["buckets"],
             'language_name' => $response["facets"]["language_name"]["buckets"],
             //'author' => $response["facets"]["author"]["buckets"],
