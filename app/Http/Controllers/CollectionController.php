@@ -141,37 +141,51 @@ class CollectionController extends Controller
 
     function getStatistic(Request $request)
     {
+        $q = "";
+        if($request->input('year_start') && $request->input('year_end')){
+            $start = Carbon::createFromFormat('Y-m-d', $request->input('year_start') . '-01-01');
+            $end = Carbon::createFromFormat('Y-m-d', $request->input('year_end') .'-12-31');
+            $interval = new DateInterval('P1Y');
+            $daterange = new DatePeriod($start, $interval ,$end);
+            $ranges = [];
+            foreach($daterange as $date1){
+                $ranges[]= $date1->format('Y');
+            }
+            $q .= " AND publish_year:(".implode(" ", $ranges) . ")";
+        }
+        $json_facet = json_encode([
+            'subject' => [
+                'type' => 'terms',
+                'field'=> 'list_subjek_topik',
+                'limit' => 10
+            ],
+            'worksheet_name' => [
+                'type' => 'terms',
+                'field'=> 'worksheet_name',
+                'limit' => 20
+            ],
+            'language_name' => [
+                'type' => 'terms',
+                'field'=> 'list_language_name',
+                'limit' => 10
+            ],
+            'aksara' => [
+                'type' => 'terms',
+                'field'=> 'list_aksara',
+                'limit' => 10
+            ],
+            'author' => [
+                'type' => 'terms',
+                'field'=> 'list_author',
+                'limit' => 10
+            ]
+            ]);
         $response = kurl_solr([
             'rows'=> 0,
-            'q' => 'model:catalogs',
-            'json.facet' => json_encode([
-                'subject' => [
-                    'type' => 'terms',
-                    'field'=> 'list_subjek_topik',
-                    'limit' => 10
-                ],
-                'worksheet_name' => [
-                    'type' => 'terms',
-                    'field'=> 'worksheet_name',
-                    'limit' => 20
-                ],
-                'language_name' => [
-                    'type' => 'terms',
-                    'field'=> 'list_language_name',
-                    'limit' => 10
-                ],
-                'aksara' => [
-                    'type' => 'terms',
-                    'field'=> 'list_aksara',
-                    'limit' => 10
-                ],
-                'author' => [
-                    'type' => 'terms',
-                    'field'=> 'list_author',
-                    'limit' => 10
-                ]
-            ]),
+            'q' => 'model:catalogs' . $q,
+            'json.facet' => $json_facet,
         ]);
+        \Log::info($json_facet);
         if($response == '400'){
             return response()->json([
                     'status' => 'Failed',
@@ -179,6 +193,7 @@ class CollectionController extends Controller
             ], 500);
         } 
         return response()->json([
+            'total' => $response["response"]["numFound"],
             'subject' => $response["facets"]["subject"]["buckets"],
             'worksheet_name' => $response["facets"]["worksheet_name"]["buckets"],
             'language_name' => $response["facets"]["language_name"]["buckets"],
