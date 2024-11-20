@@ -160,6 +160,11 @@ class CollectionController extends Controller
                     'field'=> 'list_language_name',
                     'limit' => 10
                 ],
+                'aksara' => [
+                    'type' => 'terms',
+                    'field'=> 'list_aksara',
+                    'limit' => 10
+                ],
                 'author' => [
                     'type' => 'terms',
                     'field'=> 'list_author',
@@ -177,6 +182,7 @@ class CollectionController extends Controller
             'subject' => $response["facets"]["subject"]["buckets"],
             'worksheet_name' => $response["facets"]["worksheet_name"]["buckets"],
             'language_name' => $response["facets"]["language_name"]["buckets"],
+            'aksara' => $response["facets"]["aksara"]["buckets"],
             //'author' => $response["facets"]["author"]["buckets"],
         ], 200);
     }
