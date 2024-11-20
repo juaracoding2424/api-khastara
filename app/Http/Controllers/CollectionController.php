@@ -183,7 +183,7 @@ class CollectionController extends Controller
             'worksheet_name' => $response["facets"]["worksheet_name"]["buckets"],
             'language_name' => $response["facets"]["language_name"]["buckets"],
             'aksara' => $response["facets"]["aksara"]["buckets"],
-            //'author' => $response["facets"]["author"]["buckets"],
+            'author' => $response["facets"]["author"]["buckets"],
         ], 200);
     }
 }
