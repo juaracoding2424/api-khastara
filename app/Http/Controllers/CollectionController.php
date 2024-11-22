@@ -136,6 +136,7 @@ class CollectionController extends Controller
             'page' => $page,
             'length' => $length,
             'total' => $response["response"]["numFound"],
+            "time" => $response["responseHeader"]["QTime"]
         ], 200);
     }
 
@@ -185,7 +186,6 @@ class CollectionController extends Controller
             'q' => 'model:catalogs' . $q,
             'json.facet' => $json_facet,
         ]);
-        \Log::info($json_facet);
         if($response == '400'){
             return response()->json([
                     'status' => 'Failed',
