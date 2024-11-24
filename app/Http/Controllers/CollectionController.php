@@ -122,7 +122,9 @@ class CollectionController extends Controller
         }
         $response = kurl_solr([
             'fl'=> $fl,
-            'q' => 'model:catalogs' .$q
+            'q' => 'model:catalogs' .$q,
+            'rows' => $length,
+            'start' => $start,
         ]);
         
         if($response == '400'){
