@@ -47,7 +47,7 @@ class JWTValidation
                 'status'    => 'Failed'
             ], 401);
         } 
-        if((strtotime(date('Y-m-d H:i:s')) > strtotime($authapi[0]["APITOKEN_EXPIRED"])) && $authapi[0]['APITOKEN'] != '123ABC-demoonly'){
+        if((strtotime(date('Y-m-d H:i:s') . ' +7 hours') > strtotime($authapi[0]["APITOKEN_EXPIRED"])) && $authapi[0]['APITOKEN'] != '123ABC-demoonly'){
             return response()->json([
                 'message'   => 'Token expired. Please request new token',
                 'status'    => 'Failed'

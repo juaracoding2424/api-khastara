@@ -133,8 +133,8 @@ class CollectionController extends Controller
         } 
         return response()->json([
             'data' => $response["response"]["docs"],
-            'page' => $page,
-            'length' => $length,
+            'page' => intval($page),
+            'length' => intval($length),
             'total' => $response["response"]["numFound"],
             "time" => $response["responseHeader"]["QTime"]
         ], 200);
