@@ -15,7 +15,7 @@ class CollectionController extends Controller
     {
         //get data katalog
         $fl = "catalog_id,bib_id,title,control_number,author,edition,publisher,publish_year,
-                publish_location,deskripsi_fisik,subject,ddc,catatan_isi,call_number,language_code,language_name,
+                publish_location,deskripsi_fisik,subject,ddc,catatan_isi,cover_utama,call_number,language_code,language_name,
                 list_aksara,create_date,last_update_date,list_aksara,worksheet_name,konten_digital_count";       
         $response = kurl_solr([
                 'fl'=> $fl,
@@ -79,7 +79,7 @@ class CollectionController extends Controller
         $start  = ($page - 1) * $length;
         $end = $start + $length;
         $fl = "catalog_id,bib_id,title,control_number,author,edition,publisher,publish_year,
-            publish_location,deskripsi_fisik,subject,ddc,catatan_isi,call_number,language_code,language_name,
+            publish_location,deskripsi_fisik,subject,ddc,catatan_isi,cover_utama,call_number,language_code,language_name,
             list_aksara,create_date,last_update_date,list_aksara,worksheet_name,konten_digital_count";  
         $q = "";
         if($request->input('title')){
