@@ -105,6 +105,13 @@ class CollectionController extends Controller
         if($request->input('subject')){
             $q .= " AND subject_text:*".$request->input('subject')."*";
         }
+        if($request->input('konten_digital_count')){
+            if($request->input('konten_digital_count') == '0'){
+                $q .= " AND konten_digital_count:0";
+            } else {
+                $q .= " AND konten_digital_count:[0 TO *]";
+            }
+        }
 
         if($request->input('year_start') && $request->input('year_end')){
             $start = Carbon::createFromFormat('Y-m-d', $request->input('year_start') . '-01-01');
