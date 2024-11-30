@@ -195,12 +195,15 @@ class CollectionController extends Controller
                 'type' => 'terms',
                 'field'=> 'list_author',
                 'limit' => 10
-            ]
+            ],
             ]);
         $response = kurl_solr([
             'rows'=> 0,
             'q' => 'model:catalogs' . $q,
             'json.facet' => $json_facet,
+            'stats' => 'true',
+            'stats.facet' => 'worksheet_name',
+            'stats.field' => 'konten_digital_count'
         ]);
         if($response == '400'){
             return response()->json([
@@ -208,6 +211,14 @@ class CollectionController extends Controller
                     'message' => 'Error!',
             ], 500);
         } 
+        $worksheet_name_stats = $response["stats"]["stats_fields"]["konten_digital_count"]["facets"]["worksheet_name"];
+        $worksheets = [];
+        foreach($worksheet_name_stats as $key=>$val){
+            $worksheets[$key] = [
+                "total_koleksi" => $val["count"],
+                "total_konten_digital" => $val["sum"]
+            ];
+        }
         return response()->json([
             'total' => $response["response"]["numFound"],
             'subject' => $response["facets"]["subject"]["buckets"],
@@ -215,6 +226,8 @@ class CollectionController extends Controller
             'language_name' => $response["facets"]["language_name"]["buckets"],
             'aksara' => $response["facets"]["aksara"]["buckets"],
             'author' => $response["facets"]["author"]["buckets"],
+            'worksheets_name_konten_digital' => $worksheets
         ], 200);
     }
+
 }
