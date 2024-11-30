@@ -93,6 +93,9 @@ class CollectionController extends Controller
         if($request->input('worksheet_name')){
             $q .= ' AND worksheet_name:"'.trim($request->input('worksheet_name')).'"';
         }
+        if($request->input('bib_id')){
+            $q .= ' AND bib_id:'.trim($request->input('bibid'));
+        }
         
         if($request->input('author')){
             $q .= " AND author_text:*".$request->input('author')."*";
