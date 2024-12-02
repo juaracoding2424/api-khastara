@@ -100,7 +100,7 @@ class CollectionController extends Controller
             $q .= ' AND language_name:"'.trim($request->input('language_name')).'"';
         }
         if($request->input('list_entri_tambahan_nama_tak_terkendali')){
-            $q .= ' AND list_entri_tambahan_nama_tak_terkendali:"'.trim($request->input('list_entri_tambahan_nama_tak_terkendali')).'"';
+            $q .= ' AND list_entri_tambahan_nama_tak_terkendali:*'.trim($request->input('list_entri_tambahan_nama_tak_terkendali')).'*';
         }
         if($request->input('bib_id')){
             $q .= ' AND bib_id:'.trim($request->input('bibid'));
