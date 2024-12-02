@@ -88,6 +88,7 @@ class CollectionController extends Controller
             publish_location,deskripsi_fisik,subject,ddc,catatan_isi,cover_utama,call_number,language_code,language_name,
             aksara,list_entri_tambahan_nama_tak_terkendali,worksheet_name,konten_digital_count,create_date,last_update_date";  
         $q = "";
+        $query = [];
         if($request->input('title')){
             $count = str_word_count($request->input('title'));
             if($count > 1) {
@@ -95,36 +96,80 @@ class CollectionController extends Controller
             } else {
                 $q .= " AND title_text:*" .$request->input('title'). "*";
             }
+            array_push($query, [
+                "field" => "title",
+                "value" => $request->input('title')
+            ]);
         }
         if($request->input('worksheet_name')){
             $q .= ' AND worksheet_name:"'.trim($request->input('worksheet_name')).'"';
+            array_push($query, [
+                "field" => "worksheet_name",
+                "value" => $request->input('worksheet_name')
+            ]);
         }
         if($request->input('aksara')){
             $q .= ' AND aksara:"' .$request->input('aksara'). '"';
+            array_push($query, [
+                "field" => "aksara",
+                "value" => $request->input('aksara')
+            ]);
         }
         if($request->input('language_name')){
             $q .= ' AND language_name:"'.trim($request->input('language_name')).'"';
+            array_push($query, [
+                "field" => "language_name",
+                "value" => $request->input('language_name')
+            ]);
         }
         if($request->input('list_entri_tambahan_nama_tak_terkendali')){
             $q .= ' AND list_entri_tambahan_nama_tak_terkendali:*'.trim($request->input('list_entri_tambahan_nama_tak_terkendali')).'*';
+            array_push($query, [
+                "field" => "list_entri_tambahan_nama_tak_terkendali",
+                "value" => $request->input('list_entri_tambahan_nama_tak_terkendali')
+            ]);
         }
         if($request->input('bib_id')){
-            $q .= ' AND bib_id:'.trim($request->input('bibid'));
+            $q .= ' AND bib_id:'.trim($request->input('bib_id'));
+            array_push($query, [
+                "field" => "bib_id",
+                "value" => $request->input('bib_id')
+            ]);
         }
         if($request->input('author')){
             $q .= " AND author_text:*".$request->input('author')."*";
+            array_push($query, [
+                "field" => "author",
+                "value" => $request->input('author')
+            ]);
         }
         if($request->input('publisher')){
             $q .= " AND publisher_text:*".$request->input('publisher')."*";
+            array_push($query, [
+                "field" => "publisher",
+                "value" => $request->input('publisher')
+            ]);
         }
         if($request->input('publish_year')){
             $q .= " AND publish_year:".$request->input('publish_year');
+            array_push($query, [
+                "field" => "publish_year",
+                "value" => $request->input('publish_year')
+            ]);
         }
         if($request->input('catatan_isi')){
             $q .= " AND catatan_isi:*".$request->input('catatan_isi')."*";
+            array_push($query, [
+                "field" => "catatan_isi",
+                "value" => $request->input('catatan_isi')
+            ]);
         }
         if($request->input('subject')){
             $q .= " AND subject_text:*".$request->input('subject')."*";
+            array_push($query, [
+                "field" => "subject",
+                "value" => $request->input('subject')
+            ]);
         }
         if($request->input('konten_digital_count')){
             if($request->input('konten_digital_count') == '0'){
@@ -132,6 +177,10 @@ class CollectionController extends Controller
             } else {
                 $q .= " AND konten_digital_count:[0 TO *]";
             }
+            array_push($query, [
+                "field" => "konten_digital_count",
+                "value" => $request->input('konten_digital_count')
+            ]);
         }
 
         if($request->input('year_start') && $request->input('year_end')){
@@ -144,9 +193,21 @@ class CollectionController extends Controller
                 $ranges[]= $date1->format('Y');
             }
             $q .= " AND publish_year:(".implode(" ", $ranges) . ")";
+            array_push($query, [
+                "field" => "year_start",
+                "value" => $request->input('year_start')
+            ]);
+            array_push($query, [
+                "field" => "year_end",
+                "value" => $request->input('year_end')
+            ]);
         }
         if($request->input('year')){
             $q .= " AND publish_year:".$request->input('year');
+            array_push($query, [
+                "field" => "year",
+                "value" => $request->input('year')
+            ]);
         }
         $response = kurl_solr([
             'fl'=> $fl,
@@ -166,7 +227,8 @@ class CollectionController extends Controller
             'page' => intval($page),
             'length' => intval($length),
             'total' => $response["response"]["numFound"],
-            "time" => $response["responseHeader"]["QTime"]
+            "time" => $response["responseHeader"]["QTime"],
+            'query' => $query
         ], 200);
     }
 
