@@ -230,12 +230,12 @@ class CollectionController extends Controller
             ], 500);
         } 
         return response()->json([
-            'data' => $response["response"]["docs"],
             'page' => intval($page),
             'length' => intval($length),
             'total' => $response["response"]["numFound"],
             "time" => $response["responseHeader"]["QTime"],
-            'query' => $query
+            'query' => $query,
+            'data' => $response["response"]["docs"]
         ], 200);
     }
 
@@ -304,6 +304,7 @@ class CollectionController extends Controller
         }
         return response()->json([
             'total' => $response["response"]["numFound"],
+            "time" => $response["responseHeader"]["QTime"],
             'subject' => $response["facets"]["subject"]["buckets"],
             'worksheet_name' => $response["facets"]["worksheet_name"]["buckets"],
             'language_name' => $response["facets"]["language_name"]["buckets"],
