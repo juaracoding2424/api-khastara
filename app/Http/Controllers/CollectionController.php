@@ -115,6 +115,13 @@ class CollectionController extends Controller
                 "value" => $request->input('aksara')
             ]);
         }
+        if($request->input('call_number')){
+            $q .= ' AND (call_number_text:"' .$request->input('call_number'). '" OR ddc:"' .$request->input('call_number'). '")';
+            array_push($query, [
+                "field" => "call_number",
+                "value" => $request->input('call_number')
+            ]);
+        }
         if($request->input('language_name')){
             $q .= ' AND language_name:"'.trim($request->input('language_name')).'"';
             array_push($query, [
