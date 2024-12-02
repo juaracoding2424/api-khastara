@@ -36,7 +36,7 @@ class TokenController extends Controller
             }
         } else {
             return response()->json([
-                'message' => "Application Key tidak ditemukan",
+                'message' => "Application Key not found!",
                 'status' => "Failed"
             ], 401);
         }
