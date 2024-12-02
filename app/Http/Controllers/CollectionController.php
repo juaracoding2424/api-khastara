@@ -16,7 +16,7 @@ class CollectionController extends Controller
         //get data katalog
         $fl = "catalog_id,bib_id,title,control_number,author,edition,publisher,publish_year,
                 publish_location,deskripsi_fisik,subject,ddc,catatan_isi,cover_utama,call_number,language_code,language_name,
-                list_aksara,create_date,last_update_date,list_aksara,worksheet_name,konten_digital_count";       
+                list_aksara,list_entri_tambahan_nama_tak_terkendali,worksheet_name,konten_digital_count,create_date,last_update_date";       
         $response = kurl_solr([
                 'fl'=> $fl,
                 'q' => 'model:catalogs AND catalog_id:'.$id
@@ -80,7 +80,7 @@ class CollectionController extends Controller
         $end = $start + $length;
         $fl = "catalog_id,bib_id,title,control_number,author,edition,publisher,publish_year,
             publish_location,deskripsi_fisik,subject,ddc,catatan_isi,cover_utama,call_number,language_code,language_name,
-            list_aksara,create_date,last_update_date,list_aksara,worksheet_name,konten_digital_count";  
+            list_aksara,list_entri_tambahan_nama_tak_terkendali,worksheet_name,konten_digital_count,create_date,last_update_date";  
         $q = "";
         if($request->input('title')){
             $count = str_word_count($request->input('title'));
@@ -93,10 +93,18 @@ class CollectionController extends Controller
         if($request->input('worksheet_name')){
             $q .= ' AND worksheet_name:"'.trim($request->input('worksheet_name')).'"';
         }
+        if($request->input('list_aksara')){
+            $q .= ' AND list_aksara:"'.trim($request->input('list_aksara')).'"';
+        }
+        if($request->input('language_name')){
+            $q .= ' AND language_name:"'.trim($request->input('language_name')).'"';
+        }
+        if($request->input('list_entri_tambahan_nama_tak_terkendali')){
+            $q .= ' AND list_entri_tambahan_nama_tak_terkendali:"'.trim($request->input('list_entri_tambahan_nama_tak_terkendali')).'"';
+        }
         if($request->input('bib_id')){
             $q .= ' AND bib_id:'.trim($request->input('bibid'));
         }
-        
         if($request->input('author')){
             $q .= " AND author_text:*".$request->input('author')."*";
         }
