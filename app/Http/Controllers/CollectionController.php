@@ -27,6 +27,12 @@ class CollectionController extends Controller
                     'message' => 'ID ' . $id . ' not found!',
             ], 500);
         } 
+        if($response["response"]['numFound']== '0'){ //data katalog tidak ditemukan
+            return response()->json([
+                    'status' => 'Failed',
+                    'message' => 'ID ' . $id . ' not found!',
+            ], 500);
+        } 
         $sql_catalog_ruas = "SELECT tag, indicator1, indicator2, sequence, value FROM catalog_ruas WHERE CATALOGID='$id' ORDER BY sequence ";
         $catalog_ruas = Http::post(config('app.internal_api_url') . "?token=" . config('app.internal_api_token') . "&op=getlistraw&sql=" . urlencode($sql_catalog_ruas));
         $catalog_ruas_new = [];
