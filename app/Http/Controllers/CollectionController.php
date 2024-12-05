@@ -16,7 +16,7 @@ class CollectionController extends Controller
         //get data katalog
         $fl = "catalog_id,bib_id,title,control_number,author,edition,publisher,publish_year,
                 publish_location,deskripsi_fisik,subject,ddc,catatan_isi,cover_utama,call_number,language_code,language_name,
-                aksara,list_entri_tambahan_nama_tak_terkendali,worksheet_name,konten_digital_count,create_date,last_update_date";       
+                aksara,list_entri_tambahan_nama_tak_terkendali,list_abstraksi,worksheet_name,konten_digital_count,create_date,last_update_date";       
         $response = kurl_solr([
                 'fl'=> $fl,
                 'q' => 'model:catalogs AND catalog_id:'.$id
@@ -86,7 +86,7 @@ class CollectionController extends Controller
         $end = $start + $length;
         $fl = "catalog_id,bib_id,title,control_number,author,edition,publisher,publish_year,
             publish_location,deskripsi_fisik,subject,ddc,catatan_isi,cover_utama,call_number,language_code,language_name,
-            aksara,list_entri_tambahan_nama_tak_terkendali,worksheet_name,konten_digital_count,create_date,last_update_date";  
+            aksara,list_entri_tambahan_nama_tak_terkendali,list_abstraksi,worksheet_name,konten_digital_count,create_date,last_update_date";  
         $q = "";
         $query = [];
         if($request->input('title')){
