@@ -82,8 +82,8 @@ class CollectionController extends Controller
     {
         $page = $request->input('page') ? $request->input('page') : 1;
         $length = $request->input('length') ? $request->input('length') : 10;
-        $start  = ($page - 1) * $length;
-        $end = $start + $length;
+        $start_page  = ($page - 1) * $length;
+        $end = $start_page + $length;
         $fl = "catalog_id,bib_id,title,control_number,author,edition,publisher,publish_year,
             publish_location,deskripsi_fisik,subject,ddc,catatan_isi,cover_utama,call_number,language_code,language_name,
             aksara,list_entri_tambahan_nama_tak_terkendali,list_abstraksi,worksheet_name,konten_digital_count,create_date,last_update_date";  
@@ -220,8 +220,9 @@ class CollectionController extends Controller
             'fl'=> $fl,
             'q' => 'model:catalogs' .$q,
             'rows' => $length,
-            'start' => $start,
+            'start' => $start_page,
         ]);
+
         
         if($response == '400'){
             return response()->json([
