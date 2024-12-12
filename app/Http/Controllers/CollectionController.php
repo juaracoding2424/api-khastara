@@ -172,7 +172,12 @@ class CollectionController extends Controller
             ]);
         }
         if($request->input('subject')){
-            $q .= " AND subject_text:*".$request->input('subject')."*";
+            $count = str_word_count($request->input('subject'));
+            if($count > 1) {
+                $q .= ' AND subject_text:"' .$request->input('subject'). '"';
+            } else {
+                $q .= " AND subject_text:*" .$request->input('subject'). "*";
+            }
             array_push($query, [
                 "field" => "subject",
                 "value" => $request->input('subject')
