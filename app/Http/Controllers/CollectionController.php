@@ -130,7 +130,7 @@ class CollectionController extends Controller
             ]);
         }
         if($request->input('list_entri_tambahan_nama_tak_terkendali')){
-            $q .= ' AND list_entri_tambahan_nama_tak_terkendali:*'.trim($request->input('list_entri_tambahan_nama_tak_terkendali')).'*';
+            $q .= ' AND list_entri_tambahan_nama_tak_terkendali:"'.trim($request->input('list_entri_tambahan_nama_tak_terkendali')).'"';
             array_push($query, [
                 "field" => "list_entri_tambahan_nama_tak_terkendali",
                 "value" => $request->input('list_entri_tambahan_nama_tak_terkendali')
