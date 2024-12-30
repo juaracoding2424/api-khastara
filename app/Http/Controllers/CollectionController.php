@@ -86,7 +86,8 @@ class CollectionController extends Controller
         $end = $start_page + $length;
         $fl = "catalog_id,bib_id,title,control_number,author,edition,publisher,publish_year,
             publish_location,deskripsi_fisik,subject,ddc,catatan_isi,cover_utama,call_number,language_code,language_name,
-            aksara,list_entri_tambahan_nama_tak_terkendali,list_abstraksi,worksheet_name,konten_digital_count,create_date,last_update_date";  
+            aksara,list_entri_tambahan_nama_tak_terkendali,list_abstraksi,list_lokasi,list_catatan_lokasi,
+            worksheet_name,konten_digital_count,create_date,last_update_date";  
         $q = "";
         $query = [];
         if($request->input('title')){
@@ -140,6 +141,34 @@ class CollectionController extends Controller
             }
             array_push($query, [
                 "field" => "list_entri_tambahan_nama_tak_terkendali",
+                "value" => $str
+            ]);
+        }
+        if($request->input('list_lokasi')){
+            $str = trim($request->input('list_lokasi'));
+            $first = substr($str, 0, 1);
+            if($first == '-'){
+                $str_ = ltrim($str, $str[0]);
+                $q .= ' AND -list_lokasi:"'.$str_.'"';
+            } else {
+                $q .= ' AND list_lokasi:"'.$str.'"';
+            }
+            array_push($query, [
+                "field" => "list_lokasi",
+                "value" => $str
+            ]);
+        }
+        if($request->input('list_catatan_lokasi')){
+            $str = trim($request->input('list_catatan_lokasi'));
+            $first = substr($str, 0, 1);
+            if($first == '-'){
+                $str_ = ltrim($str, $str[0]);
+                $q .= ' AND -list_catatan_lokasi:"'.$str_.'"';
+            } else {
+                $q .= ' AND list_catatan_lokasi:"'.$str.'"';
+            }
+            array_push($query, [
+                "field" => "list_catatan_lokasi",
                 "value" => $str
             ]);
         }
