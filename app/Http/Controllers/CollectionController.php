@@ -130,10 +130,17 @@ class CollectionController extends Controller
             ]);
         }
         if($request->input('list_entri_tambahan_nama_tak_terkendali')){
-            $q .= ' AND list_entri_tambahan_nama_tak_terkendali:"'.trim($request->input('list_entri_tambahan_nama_tak_terkendali')).'"';
+            $str = trim($request->input('list_entri_tambahan_nama_tak_terkendali'));
+            $first = substr($str, 0, 1);
+            if($first == '-'){
+                $str_ = ltrim($str, $str[0]);
+                $q .= ' AND -list_entri_tambahan_nama_tak_terkendali:"'.$str_.'"';
+            } else {
+                $q .= ' AND list_entri_tambahan_nama_tak_terkendali:"'.$str.'"';
+            }
             array_push($query, [
                 "field" => "list_entri_tambahan_nama_tak_terkendali",
-                "value" => $request->input('list_entri_tambahan_nama_tak_terkendali')
+                "value" => $str
             ]);
         }
         if($request->input('bib_id')){
