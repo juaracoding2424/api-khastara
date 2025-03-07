@@ -23,6 +23,7 @@ class JWTValidation
             ], 401);
         }
         $authapi = kurl("get","getlistraw", "", "SELECT * FROM API_MEMBERS WHERE APITOKEN='$authorization'", 'sql', '')["Data"]["Items"];
+        //\Log::info($authapi);
         if(!isset($authapi[0])){
             return response()->json([
                 'message'   => 'Token not valid!',
