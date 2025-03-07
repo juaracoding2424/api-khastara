@@ -42,6 +42,7 @@ function kurl($method, $action, $table, $data, $kategori, $params = null) {
 function kurl_solr($form_data)
 {
     $response = Http::asForm()->get(config('app.solr_url'), $form_data);
+    //\Log::info($form_data);
     if ($response->successful()) {
         $data = $response->json();
         return $data;
