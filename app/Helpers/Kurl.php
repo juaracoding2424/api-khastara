@@ -115,7 +115,7 @@ function cacheSolr($array, $functionName)
 {
     $key = createKeyFromArray($array, $functionName);
     try{
-        $data = Cache::remember($key, now()->addMinutes(30), function() use($array){
+        $data = Cache::remember($key, now()->addMinutes(1440), function() use($array){
             $response = Http::asForm()->get(config('app.solr_url'), $array);
             if ($response->successful()) {
                 $data = $response->json();
@@ -135,7 +135,7 @@ function cacheData($request, $functionName, $sql, $jumlahOrItems = 'items')
 {
     $key = createKeyFromUrl($request, $functionName, $penerbit_id);
     try{
-        $data = Cache::remember($key, now()->addMinutes(30), function() use($sql, $jumlahOrItems){
+        $data = Cache::remember($key, now()->addMinutes(1440), function() use($sql, $jumlahOrItems){
             if($jumlahOrItems == 'items'){
                 $ret = kurl("post","getlistraw", "", $sql, 'sql', '')["Data"];
                 if(isset($ret["Items"])){
@@ -143,7 +143,7 @@ function cacheData($request, $functionName, $sql, $jumlahOrItems = 'items')
                 } else {
                     $ret = [];                                                                                                                                                                                                                                                                                   
                 }
-            } else{
+            } else {
                 $q = kurl("post","getlistraw", "", $sql, 'sql', '')["Data"]["Items"];
                 if(isset($q[0])){
                     $ret = $q[0]["JUMLAH"];
