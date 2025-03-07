@@ -17,10 +17,14 @@ class CollectionController extends Controller
         $fl = "catalog_id,bib_id,title,control_number,author,edition,publisher,publish_year,
                 publish_location,deskripsi_fisik,subject,ddc,catatan_isi,cover_utama,call_number,language_code,language_name,
                 aksara,list_entri_tambahan_nama_tak_terkendali,list_abstraksi,worksheet_name,konten_digital_count,create_date,last_update_date";       
-        $response = kurl_solr([
+        /*$response = kurl_solr([
                 'fl'=> $fl,
                 'q' => 'model:catalogs AND catalog_id:'.$id
-        ]);
+        ]);*/
+        $response = cacheSolr([
+            'fl'=> $fl,
+            'q' => 'model:catalogs AND catalog_id:'.$id
+        ], 'collections_getById');
         if($response == '400'){ //data katalog tidak ditemukan
             return response()->json([
                     'status' => 'Failed',
@@ -34,7 +38,7 @@ class CollectionController extends Controller
             ], 500);
         } 
         $sql_catalog_ruas = "SELECT tag, indicator1, indicator2, sequence, value FROM catalog_ruas WHERE CATALOGID='$id' ORDER BY sequence ";
-        $catalog_ruas = Http::post(config('app.internal_api_url') . "?token=" . config('app.internal_api_token') . "&op=getlistraw&sql=" . urlencode($sql_catalog_ruas));
+        $catalog_ruas = Http::get(config('app.internal_api_url') . "?token=" . config('app.internal_api_token') . "&op=getlistraw&sql=" . urlencode($sql_catalog_ruas));
         $catalog_ruas_new = [];
         foreach($catalog_ruas['Data']['Items'] as $c){
             $c_detail = [];
@@ -54,7 +58,7 @@ class CollectionController extends Controller
     {
         //get data katalog
         $sql = "SELECT catalog_id, fileurl FROM CATALOGFILES WHERE CATALOG_ID='$id' AND ispublish=1 AND isfileexist=1";
-        $data = Http::post(config('app.internal_api_url') . "?token=" . config('app.internal_api_token') . "&op=getlistkontendigital&CatalogId=" . $id);
+        $data = Http::get(config('app.internal_api_url') . "?token=" . config('app.internal_api_token') . "&op=getlistkontendigital&CatalogId=" . $id);
         
         if(!isset($data['Data']["Items"][0])){ //data katalog tidak ditemukan
             return response()->json([
@@ -257,13 +261,20 @@ class CollectionController extends Controller
                 "value" => $request->input('year')
             ]);
         }
+        /*
         $response = kurl_solr([
             'fl'=> $fl,
             'q' => 'model:catalogs' .$q,
             'rows' => $length,
             'start' => $start_page,
         ]);
-
+        */
+        $response = cacheSolr([
+            'fl'=> $fl,
+            'q' => 'model:catalogs' .$q,
+            'rows' => $length,
+            'start' => $start_page,
+        ], 'collections_getList');
         
         if($response == '400'){
             return response()->json([
@@ -322,14 +333,22 @@ class CollectionController extends Controller
                 'limit' => 10
             ],
             ]);
-        $response = kurl_solr([
+        /*$response = kurl_solr([
             'rows'=> 0,
             'q' => 'model:catalogs' . $q,
             'json.facet' => $json_facet,
             'stats' => 'true',
             'stats.facet' => 'worksheet_name',
             'stats.field' => 'konten_digital_count'
-        ]);
+        ]);*/
+        $response = cacheSolr([
+            'rows'=> 0,
+            'q' => 'model:catalogs' . $q,
+            'json.facet' => $json_facet,
+            'stats' => 'true',
+            'stats.facet' => 'worksheet_name',
+            'stats.field' => 'konten_digital_count'
+        ], 'collections_getStatistic');
         if($response == '400'){
             return response()->json([
                     'status' => 'Failed',
